@@ -144,7 +144,7 @@ export function JugadorPageClient({ jugador }: { jugador: JugadorCompleto }) {
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-3 rounded-none bg-slate-50 border border-slate-100 flex items-start gap-3">
+                            <div className="p-3 rounded-none bg-slate-50 border col-span-2 border-slate-100 flex items-start gap-3">
                                 <div className="p-2 rounded-none bg-blue-100 text-blue-600 shrink-0">
                                     <User className="w-4 h-4" />
                                 </div>
@@ -171,7 +171,7 @@ export function JugadorPageClient({ jugador }: { jugador: JugadorCompleto }) {
                                     <Calendar className="w-4 h-4" />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-xs text-slate-500 font-medium">Edad / Nacimiento</p>
+                                    <p className="text-xs text-slate-500 font-medium">Edad</p>
                                     <p className="text-sm font-bold text-slate-800">
                                         {edad !== null ? `${edad} años` : '-'}
                                     </p>
