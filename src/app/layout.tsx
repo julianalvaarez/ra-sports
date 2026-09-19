@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     description: 'Agencia de representación y desarrollo profesional de jugadores de fútbol.',
     images: ['/rasports.jpg'],
   },
+  other: {
+    google: 'notranslate',
+  },
   robots: { index: true, follow: true },
 };
 
@@ -46,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 
   return (
-    <html lang="es" dir="ltr">
+    <html lang="es" dir="ltr" translate="no">
       <body className={inter.className + " flex min-h-screen flex-col"}>
         <a href="#contenido-principal" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-black">
           Saltar al contenido principal
