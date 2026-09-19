@@ -2,16 +2,15 @@
 import { Jugador } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext } from "./ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
 import Autoplay from "embla-carousel-autoplay"
 
 export function CarouselPlayers({ players }: { players: Jugador[] }) {
     return (
-        <Carousel className="w-full max-w-7xl p-5" aria-label="Jugadores representados" plugins={[
-            Autoplay({
-                delay: 2000,
-            }),
-        ]}>
+        <Carousel className="w-full max-w-7xl p-5 " aria-label="Jugadores representados" plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]} opts={{
+            align: "start",
+            loop: true,
+        }}>
             <CarouselContent>
                 {players.map((j: Jugador) => (
                     <CarouselItem key={j.id} className="md:basis-1/3 sm:basis-1/2 lg:basis-1/4">
@@ -51,7 +50,8 @@ export function CarouselPlayers({ players }: { players: Jugador[] }) {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselNext />
+            <CarouselPrevious className="bg-white cursor-pointer text-black hover:bg-gray-200" />
+            <CarouselNext className="bg-white cursor-pointer text-black hover:bg-gray-200" />
         </Carousel>
     )
 }

@@ -1,15 +1,17 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { SheetContent, Sheet, SheetHeader, SheetTitle, SheetTrigger, } from "@/components/ui/sheet"
+import { SheetContent, Sheet, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { IoMenu } from "react-icons/io5";
 import { FaInstagram } from "react-icons/fa";
 import { GoMail } from "react-icons/go";
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 
 export const Navbar = () => {
     const pathname = usePathname();
+    const [open, setOpen] = useState(false);
     const isLightPage = pathname === '/profesionales' || pathname === '/juveniles' || pathname?.startsWith('/jugadores/');
     const isHome = pathname === '/';
 
@@ -21,30 +23,36 @@ export const Navbar = () => {
 
     const logoSrc = isLightPage ? '/azul.png' : '/blanco.png';
 
+    const handleNavigate = () => setOpen(false);
+
     return (
         <header className={`w-full flex items-center justify-between md:justify-around py-4 px-8 ${headerStyles}`}>
             <div>
-                <Link href="/" className="font-bold text-lg">
+                <Link href="/" className="font-bold text-lg" onClick={handleNavigate}>
                     <Image src={logoSrc} alt="RA.Sports Logo" width={70} height={70} />
                 </Link>
             </div>
             <div className="md:hidden">
-                <Sheet>
+                <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger aria-label="Abrir menú de navegación" render={<IoMenu size={25} className={isLightPage ? 'text-black' : 'text-white'} />} />
                     <SheetContent>
                         <SheetHeader>
-                            <SheetTitle>Menú de navegación</SheetTitle>
+                            <SheetTitle></SheetTitle>
                         </SheetHeader>
                         <div className='flex flex-col items-center gap-14 mt-6'>
-                            <Link href="/">
+                            <Link href="/" onClick={handleNavigate}>
                                 <Image src={"/azul.png"} alt="RA.Sports Logo" width={100} height={100} />
                             </Link>
                             <ul className='font-semibold flex flex-col gap-10 text-center text-xl'>
-                                <li className='hover:underline '><Link href="/profesionales">Profesionales</Link></li>
-                                <li className='hover:underline '><Link href="/juveniles">Juveniles</Link></li>
+                                <li className='hover:underline '>
+                                    <Link href="/profesionales" onClick={handleNavigate}>Profesionales</Link>
+                                </li>
+                                <li className='hover:underline '>
+                                    <Link href="/juveniles" onClick={handleNavigate}>Juveniles</Link>
+                                </li>
                                 <li className='flex justify-center items-center gap-5 text-lg'>
-                                    <a aria-label="Instagram de R.A Sports" href="https://www.instagram.com/rodriealvarez/" target="_blank" rel="noopener noreferrer" className='focus:scale-95 transition-transform'><FaInstagram size={25} /></a>
-                                    <a aria-label="Enviar correo a R.A Sports" href="mailto:ro-1312@hotmail.com" className='focus:scale-95 transition-transform'><GoMail size={25} /></a>
+                                    <a aria-label="Instagram de R.A Sports" href="https://www.instagram.com/rodriealvarez/" target="_blank" rel="noopener noreferrer" className='focus:scale-95 transition-transform' onClick={handleNavigate}><FaInstagram size={25} /></a>
+                                    <a aria-label="Enviar correo a R.A Sports" href="mailto:ro-1312@hotmail.com" className='focus:scale-95 transition-transform' onClick={handleNavigate}><GoMail size={25} /></a>
                                 </li>
                             </ul>
                         </div>

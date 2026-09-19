@@ -4,6 +4,7 @@ import { CarouselPlayers } from "./components/Carousel";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { MdOutlineKeyboardDoubleArrowRight, MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 
 export default async function Home() {
   const jugadores: Jugador[] = await obtenerJugadoresResumen();
@@ -34,9 +35,15 @@ export default async function Home() {
       </main>
       <section className="flex flex-col items-center justify-center gap-4 py-8 my-20">
         <div id="profesionales" className="flex items-center gap-6" aria-labelledby="titulo-profesionales"><Image src="/azul.png" alt="" width={40} height={40} aria-hidden="true" /><h2 id="titulo-profesionales" className="text-3xl md:text-4xl font-semibold"><Link href="/profesionales">Profesionales</Link></h2><Image src="/azul.png" alt="" width={40} height={40} aria-hidden="true" /></div>
+        <span className="flex items-center gap-1 font-bold text-muted-foreground animate-bounce md:hidden -mb-8"><MdOutlineKeyboardDoubleArrowLeft />
+          Desliza <MdOutlineKeyboardDoubleArrowRight />
+        </span>
         <CarouselPlayers players={jugadores.filter(jugador => jugador.categoria === "profesional")} />
         <hr className="m-10 w-full" />
         <div id="juveniles" className="flex items-center gap-6" aria-labelledby="titulo-juveniles"><Image src="/azul.png" alt="" width={40} height={40} aria-hidden="true" /><h2 id="titulo-juveniles" className="text-3xl md:text-4xl font-semibold"><Link href="/juveniles">Juveniles</Link></h2><Image src="/azul.png" alt="" width={40} height={40} aria-hidden="true" /></div>
+        <span className="flex items-center gap-1 font-bold text-muted-foreground animate-bounce md:hidden -mb-8"><MdOutlineKeyboardDoubleArrowLeft />
+          Desliza <MdOutlineKeyboardDoubleArrowRight />
+        </span>
         <CarouselPlayers players={jugadores.filter(jugador => jugador.categoria === "juvenil").sort((a, b) => b.nombre.localeCompare(a.nombre))} />
 
       </section>

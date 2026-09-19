@@ -155,15 +155,20 @@ export function GaleriaJugador({ imagenes, nombreJugador }: GaleriaJugadorProps)
                     onClick={() => setImagenSeleccionada(null)}
                 >
                     <button
-                        onClick={() => setImagenSeleccionada(null)}
-                        className="absolute top-4 right-4 text-white hover:text-slate-300 p-2 bg-slate-800/80 rounded-full transition-colors cursor-pointer"
+                        type="button"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            setImagenSeleccionada(null);
+                        }}
+                        className="absolute top-4 right-4 text-white hover:text-slate-300 p-2 bg-slate-800/80 rounded-full transition-colors cursor-pointer z-10"
                         aria-label="Cerrar modal"
                     >
                         <X className="w-6 h-6" />
                     </button>
                     <div
                         className="relative max-w-5xl max-h-[90vh] w-full h-full flex items-center justify-center"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(event) => event.stopPropagation()}
                     >
                         <Image
                             src={imagenSeleccionada}
