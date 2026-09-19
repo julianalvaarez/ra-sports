@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, ChangeEvent } from 'react';
+import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -58,6 +58,20 @@ export default function JugadorForm({ jugadorInicial }: JugadorFormProps) {
     const [fotosLocales, setFotosLocales] = useState<Array<{ id: string; file: File; preview: string }>>([]);
 
     const inputFotosRef = useRef<HTMLInputElement>(null);
+    const archivosEscudosRef = useRef(archivosEscudos);
+    const fotosLocalesRef = useRef(fotosLocales);
+
+    useEffect(() => {
+        archivosEscudosRef.current = archivosEscudos;
+        fotosLocalesRef.current = fotosLocales;
+    }, [archivosEscudos, fotosLocales]);
+
+    useEffect(() => {
+        return () => {
+            Object.values(archivosEscudosRef.current).forEach(({ preview }) => URL.revokeObjectURL(preview));
+            fotosLocalesRef.current.forEach(({ preview }) => URL.revokeObjectURL(preview));
+        };
+    }, []);
 
     const valoresPorDefecto = jugadorInicial
         ? {
@@ -134,12 +148,14 @@ export default function JugadorForm({ jugadorInicial }: JugadorFormProps) {
             ...prev,
             [index]: { file, preview },
         }));
+        if (archivosEscudos[index]) URL.revokeObjectURL(archivosEscudos[index].preview);
         e.target.value = '';
     };
 
     const quitarEscudoLocal = (index: number) => {
         setArchivosEscudos((prev) => {
             const nuevo = { ...prev };
+            if (nuevo[index]) URL.revokeObjectURL(nuevo[index].preview);
             delete nuevo[index];
             return nuevo;
         });
@@ -160,7 +176,11 @@ export default function JugadorForm({ jugadorInicial }: JugadorFormProps) {
     };
 
     const quitarFotoLocal = (id: string) => {
-        setFotosLocales((prev) => prev.filter((f) => f.id !== id));
+        setFotosLocales((prev) => {
+            const foto = prev.find((item) => item.id === id);
+            if (foto) URL.revokeObjectURL(foto.preview);
+            return prev.filter((f) => f.id !== id);
+        });
     };
 
     const subirArchivosServidor = async (files: File[], folder: string): Promise<string[]> => {
@@ -422,7 +442,7 @@ export default function JugadorForm({ jugadorInicial }: JugadorFormProps) {
                                                 </div>
                                             )}
 
-                                            <div className="flex-1 space-y-2 min-w-[200px]">
+                                            <div className="min-w-50 flex-1 space-y-2">
                                                 <div className="flex items-center gap-2">
                                                     <Button
                                                         type="button"

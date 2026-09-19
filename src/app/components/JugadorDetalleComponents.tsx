@@ -124,10 +124,12 @@ export function GaleriaJugador({ imagenes, nombreJugador }: GaleriaJugadorProps)
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {imagenes.map((img, idx) => (
-                    <div
+                    <button
+                        type="button"
                         key={idx}
                         onClick={() => setImagenSeleccionada(img)}
-                        className="relative aspect-4/3 bg-slate-100 border border-slate-200 overflow-hidden group cursor-pointer rounded-none"
+                        className="relative aspect-4/3 w-full bg-slate-100 border border-slate-200 overflow-hidden group cursor-pointer rounded-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+                        aria-label={`Ampliar foto ${idx + 1} de ${nombreJugador}`}
                     >
                         <Image
                             src={img}
@@ -139,13 +141,16 @@ export function GaleriaJugador({ imagenes, nombreJugador }: GaleriaJugadorProps)
                         <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
                             <ZoomIn className="w-6 h-6" />
                         </div>
-                    </div>
+                    </button>
                 ))}
             </div>
 
             {/* MODAL / LIGHTBOX PARA VER FOTO COMPLETA */}
             {imagenSeleccionada && (
                 <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={`Foto ampliada de ${nombreJugador}`}
                     className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
                     onClick={() => setImagenSeleccionada(null)}
                 >

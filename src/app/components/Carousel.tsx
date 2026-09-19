@@ -1,26 +1,25 @@
 'use client'
 import { Jugador } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext } from "./ui/carousel";
-import Autoplay from "embla-carousel-autoplay"
-import { redirect } from "next/navigation";
 
 export function CarouselPlayers({ players }: { players: Jugador[] }) {
-    console.log(players)
     return (
-        <Carousel plugins={[Autoplay({ delay: 2000, })]} className="w-full max-w-7xl p-5">
+        <Carousel className="w-full max-w-7xl p-5" aria-label="Jugadores representados">
             <CarouselContent>
                 {players.map((j: Jugador) => (
-                    <CarouselItem key={j.id} className="md:basis-1/3 sm:basis-1/2 lg:basis-1/4 cursor-pointer " onClick={() => redirect(`/jugadores/${j.id}`)}>
-                        <div className="flex flex-col items-center justify-center gap-2 p-4 border ">
+                    <CarouselItem key={j.id} className="md:basis-1/3 sm:basis-1/2 lg:basis-1/4">
+                        <Link href={`/jugadores/${j.id}`} className="flex h-full flex-col items-center justify-center gap-2 border p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
                             <div className="w-full  ">
                                 {j.foto_principal ? (
                                     <Image
                                         src={j.foto_principal}
-                                        alt={j.club_actual || 'Club actual'}
+                                        alt={`Foto de ${j.nombre}`}
                                         className="w-full h-full object-cover"
                                         width={150}
                                         height={150}
+                                        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 25vw"
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-muted" />
@@ -43,7 +42,7 @@ export function CarouselPlayers({ players }: { players: Jugador[] }) {
                                     </div>
                                 )}
                             </div>
-                        </div>
+                        </Link>
                     </CarouselItem>
                 ))}
             </CarouselContent>

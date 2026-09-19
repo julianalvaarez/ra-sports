@@ -3,7 +3,7 @@
 import { obtenerJugadorCompleto } from "@/lib/jugadores.service";
 import { JugadorCompleto } from "@/types";
 import Image from "next/image";
-import { use, useEffect, useState, useMemo, useRef } from "react";
+import { use, useEffect, useState, useRef } from "react";
 import { YouTubeEmbed } from '@next/third-parties/google';
 import { getIdYoutube } from "@/lib/getIdsVideos";
 import { Calendar, User, Footprints, Shield, ExternalLink, Globe, Award, ArrowLeft, Download } from "lucide-react";
@@ -61,7 +61,7 @@ export default function JugadorPage({ params }: { params: Promise<{ id: string }
         }
     };
 
-    const videoConfig = useMemo(() => {
+    const videoConfig = (() => {
         if (!jugador?.link_video_resumen) return null;
         const url = jugador.link_video_resumen;
         const ytId = getIdYoutube(url);
@@ -69,20 +69,15 @@ export default function JugadorPage({ params }: { params: Promise<{ id: string }
             return { type: 'youtube', id: ytId };
         }
         return { type: 'direct', url };
-    }, [jugador?.link_video_resumen]);
+    })();
 
-    const edad = useMemo(() => {
-        return jugador?.fecha_nacimiento ? calcularEdad(jugador.fecha_nacimiento) : null;
-    }, [jugador?.fecha_nacimiento]);
+    const edad = jugador?.fecha_nacimiento ? calcularEdad(jugador.fecha_nacimiento) : null;
 
-    const trayectoriaOrdenada = useMemo(() => {
-        if (!jugador?.trayectoria) return [];
-        return [...jugador.trayectoria].sort((a, b) => a.anio_desde - b.anio_desde);
-    }, [jugador?.trayectoria]);
+    const trayectoriaOrdenada = jugador?.trayectoria
+        ? [...jugador.trayectoria].sort((a, b) => a.anio_desde - b.anio_desde)
+        : [];
 
-    const clubActual = useMemo(() => {
-        return jugador?.trayectoria?.find((t) => t.es_actual) || jugador?.trayectoria?.[jugador.trayectoria.length - 1];
-    }, [jugador?.trayectoria]);
+    const clubActual = jugador?.trayectoria?.find((t) => t.es_actual) || jugador?.trayectoria?.[jugador.trayectoria.length - 1];
 
     if (loading) {
         return (

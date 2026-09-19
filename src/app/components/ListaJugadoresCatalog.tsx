@@ -5,7 +5,7 @@ import { Jugador } from '@/types';
 import { JugadorCard } from './JugadorCard';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ListaJugadoresCatalogProps {
@@ -32,17 +32,6 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
             if (j.posicion) setPos.add(j.posicion.trim());
         });
         return Array.from(setPos).sort();
-    }, [jugadores]);
-
-    // Obtener lista de pasaportaciones/nacionalidades secundarias únicas
-    const opcionesPasaportes = useMemo(() => {
-        const setPas = new Set<string>();
-        jugadores.forEach((j) => {
-            if (j.pasaporte && j.pasaporte.trim() !== '') {
-                setPas.add(j.pasaporte.trim());
-            }
-        });
-        return Array.from(setPas).sort();
     }, [jugadores]);
 
     // Filtrar jugadores
@@ -76,7 +65,7 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
 
             // Filtro por Pasaporte / Otra nacionalidad
             if (pasaporteFiltro !== 'todos') {
-                const pasaporteNormalizado = j.pasaporte.toLowerCase().trim();
+                const pasaporteNormalizado = j.pasaporte?.toLowerCase().trim() || '';
 
                 if (pasaporteFiltro === 'con_pasaporte') {
                     // Consideramos comunitario / pasaporte europeo o cualquier pasaporte secundario cargado
@@ -102,11 +91,6 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
             return true;
         });
     }, [jugadores, categoria, busqueda, posicionFiltro, pasaporteFiltro]);
-
-    // Resetear el límite de carga al cambiar filtros
-    useEffect(() => {
-        setLimiteCarga(ITEMS_POR_PAGINA);
-    }, [busqueda, posicionFiltro, pasaporteFiltro]);
 
     // Lazy loading mediante IntersectionObserver (Infinite Scroll)
     useEffect(() => {
@@ -149,14 +133,14 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
                         <Input
                             placeholder="Buscar por nombre o club..."
                             value={busqueda}
-                            onChange={(e) => setBusqueda(e.target.value)}
+                            onChange={(e) => { setBusqueda(e.target.value); setLimiteCarga(ITEMS_POR_PAGINA); }}
                             className="pl-9  border-slate-700 placeholder:text-slate-400 focus:border-blue-500"
                         />
                     </div>
 
                     {/* Filtro por Posición (Principal o Secundaria) */}
                     <div>
-                        <Select value={posicionFiltro} onValueChange={setPosicionFiltro}>
+                        <Select value={posicionFiltro} onValueChange={(value) => { setPosicionFiltro(value); setLimiteCarga(ITEMS_POR_PAGINA); }}>
                             <SelectTrigger className="border-slate-700">
                                 <SelectValue placeholder="Filtrar por Posición" />
                             </SelectTrigger>

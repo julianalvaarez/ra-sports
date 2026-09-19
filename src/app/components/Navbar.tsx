@@ -30,10 +30,10 @@ export const Navbar = () => {
             </div>
             <div className="md:hidden">
                 <Sheet>
-                    <SheetTrigger render={<IoMenu size={25} className={isLightPage ? 'text-black' : 'text-white'} />} />
+                    <SheetTrigger aria-label="Abrir menú de navegación" render={<IoMenu size={25} className={isLightPage ? 'text-black' : 'text-white'} />} />
                     <SheetContent>
                         <SheetHeader>
-                            <SheetTitle></SheetTitle>
+                            <SheetTitle>Menú de navegación</SheetTitle>
                         </SheetHeader>
                         <div className='flex flex-col items-center gap-14 mt-6'>
                             <Link href="/">
@@ -42,10 +42,10 @@ export const Navbar = () => {
                             <ul className='font-semibold flex flex-col gap-10 text-center text-xl'>
                                 <li className='hover:underline '><Link href="/profesionales">Profesionales</Link></li>
                                 <li className='hover:underline '><Link href="/juveniles">Juveniles</Link></li>
-                                <div className='flex justify-center items-center gap-5 text-lg'>
-                                    <li><a href="https://www.instagram.com/rodriealvarez/" target="_blank" rel="noopener noreferrer" className='focus:scale-95 transition-transform'><FaInstagram size={25} /></a></li>
-                                    <li><a href="mailto:ro-1312@hotmail.com" target="_blank" rel="noopener noreferrer" className='focus:scale-95 transition-transform'><GoMail size={25} /></a></li>
-                                </div>
+                                <li className='flex justify-center items-center gap-5 text-lg'>
+                                    <a aria-label="Instagram de R.A Sports" href="https://www.instagram.com/rodriealvarez/" target="_blank" rel="noopener noreferrer" className='focus:scale-95 transition-transform'><FaInstagram size={25} /></a>
+                                    <a aria-label="Enviar correo a R.A Sports" href="mailto:ro-1312@hotmail.com" className='focus:scale-95 transition-transform'><GoMail size={25} /></a>
+                                </li>
                             </ul>
                         </div>
 
@@ -56,8 +56,8 @@ export const Navbar = () => {
                 <ul className='flex gap-8 items-center'>
                     <li className='hover:underline '><Link href="/profesionales">Profesionales</Link></li>
                     <li className='hover:underline '><Link href="/juveniles">Juveniles</Link></li>
-                    <li><a href="https://www.instagram.com/rodriealvarez/" target="_blank" rel="noopener noreferrer" className={`focus:scale-95 transition-all ${isLightPage ? 'hover:text-gray-600' : 'hover:text-gray-300'}`}><FaInstagram size={25} /></a></li>
-                    <li><a href="mailto:ro-1312@hotmail.com" target="_blank" rel="noopener noreferrer" className={`focus:scale-95 transition-all ${isLightPage ? 'hover:text-gray-600' : 'hover:text-gray-300'}`}><GoMail size={25} /></a></li>
+                    <li><a aria-label="Instagram de R.A Sports" href="https://www.instagram.com/rodriealvarez/" target="_blank" rel="noopener noreferrer" className={`focus:scale-95 transition-all ${isLightPage ? 'hover:text-gray-600' : 'hover:text-gray-300'}`}><FaInstagram size={25} /></a></li>
+                    <li><a aria-label="Enviar correo a R.A Sports" href="mailto:ro-1312@hotmail.com" className={`focus:scale-95 transition-all ${isLightPage ? 'hover:text-gray-600' : 'hover:text-gray-300'}`}><GoMail size={25} /></a></li>
                 </ul>
 
             </nav>
