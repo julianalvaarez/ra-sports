@@ -4,7 +4,7 @@ import { HomePageClient } from "./components/HomePageClient";
 
 export default async function Home() {
   const jugadores: Jugador[] = await obtenerJugadoresResumen();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rasports.agency';
   return (
     <>
       <script

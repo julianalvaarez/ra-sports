@@ -50,8 +50,8 @@ export function CarouselPlayers({ players }: { players: Jugador[] }) {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className="bg-white cursor-pointer text-black hover:bg-gray-200" />
-            <CarouselNext className="bg-white cursor-pointer text-black hover:bg-gray-200" />
+            <CarouselPrevious className="bg-white hidden md:block cursor-pointer text-black hover:bg-gray-200" />
+            <CarouselNext className="bg-white hidden md:block cursor-pointer text-black hover:bg-gray-200" />
         </Carousel>
     )
 }

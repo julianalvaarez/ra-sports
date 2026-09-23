@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { obtenerJugadoresResumen } from '@/lib/jugadores.service';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rasports.agency';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const jugadores = await obtenerJugadoresResumen();

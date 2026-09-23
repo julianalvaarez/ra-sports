@@ -236,7 +236,7 @@ export function JugadorPageClient({ jugador }: { jugador: JugadorCompleto }) {
                                 <div className="min-w-0">
                                     <p className="text-xs text-slate-500 font-medium">Pasaporte</p>
                                     <p className="text-sm font-bold text-slate-800 truncate">
-                                        {jugador.pasaporte ? jugador.pasaporte : 'No posee'}
+                                        {jugador.pasaporte ? `Argentino/${jugador.pasaporte}` : 'Argentino'}
                                     </p>
                                 </div>
                             </StaggerItem>
