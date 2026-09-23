@@ -16,7 +16,7 @@ export const Navbar = () => {
     const isHome = pathname === '/';
 
     const headerStyles = isHome
-        ? 'absolute top-0 bg-transparent md:mt-5 text-white'
+        ? 'absolute top-0 left-0 right-0 bg-transparent md:mt-5 text-white'
         : isLightPage
             ? 'bg-transparent text-black border-b border-gray-100'
             : 'bg-[#0d1e30] text-white';
@@ -26,7 +26,7 @@ export const Navbar = () => {
     const handleNavigate = () => setOpen(false);
 
     return (
-        <header className={`w-full flex items-center justify-between md:justify-around py-4 px-8 ${headerStyles}`}>
+        <header className={`w-full z-50 flex items-center justify-between md:justify-around py-4 px-8 ${headerStyles}`}>
             <div>
                 <Link href="/" className="font-bold text-lg" onClick={handleNavigate}>
                     <Image src={logoSrc} alt="RA.Sports Logo" width={70} height={70} />

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Jugador } from '@/types';
 import { JugadorCard } from './JugadorCard';
 import { Input } from '@/components/ui/input';
@@ -68,7 +69,6 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
                 const pasaporteNormalizado = j.pasaporte?.toLowerCase().trim() || '';
 
                 if (pasaporteFiltro === 'con_pasaporte') {
-                    // Consideramos comunitario / pasaporte europeo o cualquier pasaporte secundario cargado
                     const esComunitario =
                         pasaporteNormalizado.includes('Europa') ||
                         pasaporteNormalizado.includes('Europeo') ||
@@ -125,16 +125,21 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
     return (
         <div className="space-y-8">
             {/* BARRA DE BÚSQUEDA Y FILTROS */}
-            <div className=" p-4 md:p-6 space-y-4">
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="p-4 md:p-6 space-y-4 bg-white/5 backdrop-blur-sm border border-slate-800 rounded-none shadow-sm"
+            >
                 <div className="grid grid-cols-1 md:flex gap-4">
                     {/* Búsqueda por Nombre */}
                     <div className="relative md:flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 " />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                         <Input
                             placeholder="Buscar por nombre o club..."
                             value={busqueda}
                             onChange={(e) => { setBusqueda(e.target.value); setLimiteCarga(ITEMS_POR_PAGINA); }}
-                            className="pl-9  border-slate-700 placeholder:text-slate-400 focus:border-blue-500"
+                            className="pl-9 border-slate-700 placeholder:text-slate-400 focus:border-blue-500"
                         />
                     </div>
 
@@ -144,7 +149,7 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
                             <SelectTrigger className="border-slate-700">
                                 <SelectValue placeholder="Filtrar por Posición" />
                             </SelectTrigger>
-                            <SelectContent className=" border-slate-700">
+                            <SelectContent className="border-slate-700">
                                 <SelectItem value="todas">Todas las posiciones</SelectItem>
                                 {opcionesPosiciones.map((pos) => (
                                     <SelectItem key={pos} value={pos}>
@@ -154,28 +159,13 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
                             </SelectContent>
                         </Select>
                     </div>
-
-                    {/* Filtro por Pasaporte */}
-                    {/* <div>
-                        <Select value={pasaporteFiltro} onValueChange={setPasaporteFiltro}>
-                            <SelectTrigger className="border-slate-700 ">
-                                <SelectValue placeholder="Filtrar por Pasaporte" />
-                            </SelectTrigger>
-                            <SelectContent className=" border-slate-700">
-                                <SelectItem value="todos">Todos los pasaportes</SelectItem>
-                                <SelectItem value="con_pasaporte">Con pasaporte comunitario/otro</SelectItem>
-                                <SelectItem value="sin_pasaporte">Sin pasaporte secundario</SelectItem>
-
-                            </SelectContent>
-                        </Select>
-                    </div> */}
                 </div>
 
                 {/* Resumen de resultados y reset de filtros */}
-                <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-blue-950 pt-2 border-t border-slate-800">
+                <div className="flex flex-wrap items-center justify-between gap-3 text-sm  pt-2 border-t border-slate-800">
                     <div className="flex items-center gap-1">
                         <span>
-                            Mostrando <strong>{jugadoresFiltrados.length}</strong> jugador{jugadoresFiltrados.length !== 1 ? 'es' : ''}
+                            Mostrando <strong >{jugadoresFiltrados.length}</strong> jugador{jugadoresFiltrados.length !== 1 ? 'es' : ''}
                         </span>
                     </div>
 
@@ -184,37 +174,52 @@ export function ListaJugadoresCatalog({ jugadores, categoria }: ListaJugadoresCa
                             variant="ghost"
                             size="sm"
                             onClick={limpiarFiltros}
-                            className="border border-gray-500 cursor-pointer h-8 px-2"
+                            className="border border-slate-700   cursor-pointer h-8 px-2"
                         >
                             <X className="h-3.5 w-3.5 mr-1" /> Limpiar filtros
                         </Button>
                     )}
                 </div>
-            </div>
+            </motion.div>
 
-            {/* CATALOGO DE CARDS */}
+            {/* CATÁLOGO DE CARDS CON ANIMACIÓN */}
             {jugadoresFiltrados.length === 0 ? (
-                <div className="text-center py-16 border border-dashed rounded-xl bg-slate-950/40 text-slate-400 space-y-3">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-16 border border-dashed rounded-none bg-slate-900/40 text-slate-400 space-y-3"
+                >
                     <p className="text-lg font-medium text-slate-300">No se encontraron jugadores que coincidan con la búsqueda.</p>
                     <p className="text-sm">Probá cambiando los filtros o el término ingresado.</p>
                     {tieneFiltrosActivos && (
-                        <Button variant="outline" size="sm" onClick={limpiarFiltros} className="mt-2">
+                        <Button variant="outline" size="sm" onClick={limpiarFiltros} className="mt-2 border-slate-700">
                             Restablecer filtros
                         </Button>
                     )}
-                </div>
+                </motion.div>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {jugadoresVisibles.map((jugador) => (
-                            <JugadorCard key={jugador.id} jugador={jugador} />
-                        ))}
-                    </div>
+                    <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <AnimatePresence mode="popLayout">
+                            {jugadoresVisibles.map((jugador, index) => (
+                                <motion.div
+                                    key={jugador.id}
+                                    layout
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.35, delay: Math.min(index * 0.05, 0.4) }}
+                                >
+                                    <JugadorCard jugador={jugador} />
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </motion.div>
 
                     {/* Target para Lazy Loading / Infinite Scroll */}
                     {limiteCarga < jugadoresFiltrados.length && (
                         <div ref={observerTarget} className="py-8 text-center">
-                            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+                            <div className="inline-flex items-center gap-2 text-sm text-slate-400 animate-pulse">
                                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
                                 Cargando más jugadores...
                             </div>
