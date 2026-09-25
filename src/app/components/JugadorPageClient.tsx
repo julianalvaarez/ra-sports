@@ -172,6 +172,17 @@ export function JugadorPageClient({ jugador }: { jugador: JugadorCompleto }) {
 
                         {/* Grid de Atributos con Animación Staggered */}
                         <StaggerContainer className="grid grid-cols-2 gap-4">
+                            <StaggerItem className="p-3 col-span-2  rounded-none bg-slate-50 border border-slate-100 flex items-start gap-3">
+                                <div className="p-2 rounded-none bg-amber-100 text-amber-700 shrink-0">
+                                    <Globe className="w-4 h-4" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-xs text-slate-500 font-medium">Pasaporte</p>
+                                    <p className="text-sm font-bold text-slate-800 truncate">
+                                        {jugador.pasaporte ? `Argentina / ${jugador.pasaporte}` : 'Argentino'}
+                                    </p>
+                                </div>
+                            </StaggerItem>
                             <StaggerItem className="p-3 rounded-none bg-slate-50 border col-span-2 border-slate-100 flex items-start gap-3">
                                 <div className="p-2 rounded-none bg-blue-100 text-blue-600 shrink-0">
                                     <User className="w-4 h-4" />
@@ -194,7 +205,7 @@ export function JugadorPageClient({ jugador }: { jugador: JugadorCompleto }) {
                                 </StaggerItem>
                             )}
 
-                            <StaggerItem className="p-3 rounded-none bg-slate-50 border border-slate-100 flex items-start gap-3">
+                            <StaggerItem className={`p-3 rounded-none bg-slate-50 border border-slate-100 flex items-start gap-3 ${jugador.posicion_secundaria ? '' : 'col-span-2 md:col-span-1'}`}>
                                 <div className="p-2 rounded-none bg-blue-100 text-blue-600 shrink-0">
                                     <Calendar className="w-4 h-4" />
                                 </div>
@@ -229,17 +240,7 @@ export function JugadorPageClient({ jugador }: { jugador: JugadorCompleto }) {
                                 </div>
                             </StaggerItem>
 
-                            <StaggerItem className="p-3 rounded-none bg-slate-50 border border-slate-100 flex items-start gap-3">
-                                <div className="p-2 rounded-none bg-amber-100 text-amber-700 shrink-0">
-                                    <Globe className="w-4 h-4" />
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="text-xs text-slate-500 font-medium">Pasaporte</p>
-                                    <p className="text-sm font-bold text-slate-800 truncate">
-                                        {jugador.pasaporte ? `Argentino/${jugador.pasaporte}` : 'Argentino'}
-                                    </p>
-                                </div>
-                            </StaggerItem>
+
                         </StaggerContainer>
 
                         {jugador.link_transfermarkt && (

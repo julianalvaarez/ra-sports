@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   description: 'Agencia de representación y desarrollo profesional de jugadores de fútbol.',
   applicationName: 'R.A Sports',
-  keywords: ['representación futbolistas', 'agencia fútbol', 'scouting fútbol', 'jugadores de fútbol'],
+  keywords: ['representación futbolistas', 'agencia fútbol', 'scouting fútbol', 'jugadores de fútbol', 'desarrollo profesional fútbol', 'agencia de representación deportiva', 'fútbol profesional', 'jugadores profesionales', 'fútbol juvenil', 'talento futbolístico'],
   alternates: { canonical: '/' },
   icons: { icon: '/rasports.jpg', apple: '/rasports.jpg' },
   openGraph: {

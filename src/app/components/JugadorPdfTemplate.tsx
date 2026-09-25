@@ -119,7 +119,7 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
                                             )}
                                             <div className="min-w-0">
                                                 <p className="text-[10px] text-slate-500 font-medium">Club Actual</p>
-                                                <p className="text-xs font-semibold text-slate-800 truncate">{clubActual.club}</p>
+                                                <p className="text-xs font-semibold text-slate-800">{clubActual.club}</p>
                                             </div>
                                         </div>
                                     )}
@@ -128,13 +128,24 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
 
                             {/* DATOS PRINCIPALES CON ÍCONOS */}
                             <div className="grid grid-cols-2 gap-3 pt-4">
-                                <div className="p-2.5 bg-slate-50 border border-slate-100 flex items-start gap-2.5">
+                                <div className="p-2.5 bg-slate-50 col-span-2 border border-slate-100 flex items-start gap-2.5">
+                                    <div className="p-1.5 bg-amber-100 text-amber-700 shrink-0">
+                                        <Globe className="w-3.5 h-3.5" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-[10px] text-slate-500 font-medium">Pasaporte</p>
+                                        <p className="text-xs font-bold text-slate-800 ">
+                                            {jugador.pasaporte ? `Argentina / ${jugador.pasaporte}` : "No posee"}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="p-2.5 bg-slate-50 col-span-2 border border-slate-100 flex items-start gap-2.5">
                                     <div className="p-1.5 bg-blue-100 text-blue-600 shrink-0">
                                         <User className="w-3.5 h-3.5" />
                                     </div>
                                     <div className="min-w-0">
                                         <p className="text-[10px] text-slate-500 font-medium">Posición Principal</p>
-                                        <p className="text-xs font-bold text-slate-800 truncate">{jugador.posicion_principal}</p>
+                                        <p className="text-xs font-bold text-slate-800">{jugador.posicion_principal}</p>
                                     </div>
                                 </div>
 
@@ -145,12 +156,12 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
                                         </div>
                                         <div className="min-w-0">
                                             <p className="text-[10px] text-slate-500 font-medium">Pos. Secundaria</p>
-                                            <p className="text-xs font-semibold text-slate-800 truncate">{jugador.posicion_secundaria}</p>
+                                            <p className="text-xs font-semibold text-slate-800">{jugador.posicion_secundaria}</p>
                                         </div>
                                     </div>
                                 )}
 
-                                <div className="p-2.5 bg-slate-50 border border-slate-100 flex items-start gap-2.5">
+                                <div className={`p-2.5 bg-slate-50 border border-slate-100 flex items-start gap-2.5 ${jugador.posicion_secundaria ? '' : 'col-span-2'}`}>
                                     <div className="p-1.5 bg-blue-100 text-blue-600 shrink-0">
                                         <Calendar className="w-3.5 h-3.5" />
                                     </div>
@@ -160,7 +171,7 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
                                             {edad !== null ? `${edad} años` : "-"}
                                         </p>
                                         {jugador.fecha_nacimiento && (
-                                            <p className="text-[10px] text-slate-500 truncate">{jugador.fecha_nacimiento}</p>
+                                            <p className="text-[10px] text-slate-500">{jugador.fecha_nacimiento}</p>
                                         )}
                                     </div>
                                 </div>
@@ -185,17 +196,7 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
                                     </div>
                                 </div>
 
-                                <div className="p-2.5 bg-slate-50 border border-slate-100 flex items-start gap-2.5">
-                                    <div className="p-1.5 bg-amber-100 text-amber-700 shrink-0">
-                                        <Globe className="w-3.5 h-3.5" />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <p className="text-[10px] text-slate-500 font-medium">Pasaporte</p>
-                                        <p className="text-xs font-bold text-slate-800 truncate">
-                                            {jugador.pasaporte ? jugador.pasaporte : "No posee"}
-                                        </p>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
 
@@ -253,7 +254,7 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
                                                 <Award className="w-4 h-4" />
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="text-xs font-bold text-slate-900 truncate">{t.trofeo}</p>
+                                                <p className="text-xs font-bold text-slate-900">{t.trofeo}</p>
                                                 <p className="text-[10px] text-slate-500">
                                                     {t.club ? `${t.club} (${t.anio})` : `Año ${t.anio}`}
                                                 </p>
