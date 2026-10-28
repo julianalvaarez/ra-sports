@@ -11,27 +11,27 @@ async function subirASupabase(
     filename: string,
     buffer: Buffer,
     mimeType: string
-): Promise<string | null> {
-    try {
-        const { data, error } = await supabase.storage
-            .from(bucketName)
-            .upload(filename, buffer, {
-                contentType: mimeType,
-                upsert: true,
-            });
+): Promise<string> {
+    const { data, error } = await supabase.storage
+        .from(bucketName)
+        .upload(filename, buffer, {
+            contentType: mimeType,
+            upsert: true,
+        });
 
-        if (error || !data) {
-            return null;
-        }
-
-        const { data: publicUrlData } = supabase.storage
-            .from(bucketName)
-            .getPublicUrl(data.path);
-
-        return publicUrlData.publicUrl;
-    } catch {
-        return null;
+    if (error) {
+        throw new Error(error.message);
     }
+
+    if (!data) {
+        throw new Error('Supabase no devolvió información del archivo subido');
+    }
+
+    const { data: publicUrlData } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(data.path);
+
+    return publicUrlData.publicUrl;
 }
 
 async function guardarEnDiscoLocal(
@@ -66,28 +66,42 @@ export async function POST(request: NextRequest) {
 
             const buffer = Buffer.from(await file.arrayBuffer());
             const fileName = file.name || 'archivo.jpg';
-            const extension = fileName.includes('.') ? fileName.split('.').pop() : 'jpg';
+            const extension = fileName.match(/\.([^.]+)$/)?.[1] || 'jpg';
             const cleanBaseName = fileName
+                .replace(/\.[^.]+$/, '')
                 .replace(/[^a-zA-Z0-9._-]/g, '_')
                 .toLowerCase();
             const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}_${cleanBaseName}.${extension}`;
             const supabasePath = `${folder}/${uniqueFilename}`;
 
             let publicUrl: string | null = null;
+            const erroresSupabase: string[] = [];
 
             // 1. Intentar subir a Supabase Storage (players-rasports / jugadores)
             for (const bucketName of BUCKETS_SUPABASE) {
-                publicUrl = await subirASupabase(
-                    bucketName,
-                    supabasePath,
-                    buffer,
-                    file.type || 'image/jpeg'
-                );
-                if (publicUrl) break;
+                try {
+                    publicUrl = await subirASupabase(
+                        bucketName,
+                        supabasePath,
+                        buffer,
+                        file.type || 'image/jpeg'
+                    );
+                    break;
+                } catch (error: unknown) {
+                    const message = error instanceof Error ? error.message : 'Error desconocido';
+                    erroresSupabase.push(`${bucketName}: ${message}`);
+                }
             }
 
-            // 2. Si Supabase Storage no está configurado o falla, guardar localmente en public/uploads
+            // En producción el sistema de archivos local no es persistente ni necesariamente escribible.
             if (!publicUrl) {
+                if (process.env.NODE_ENV === 'production') {
+                    console.error('Falló la subida de archivos a Supabase Storage:', erroresSupabase);
+                    throw new Error(
+                        'No se pudo subir el archivo a Supabase Storage. Verifica que exista el bucket "players-rasports" o "jugadores" y que las credenciales de producción permitan subir archivos.'
+                    );
+                }
+
                 publicUrl = await guardarEnDiscoLocal(folder, uniqueFilename, buffer);
             }
 

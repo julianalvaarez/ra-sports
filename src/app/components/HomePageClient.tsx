@@ -46,7 +46,7 @@ export function HomePageClient({ jugadores }: HomePageClientProps) {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-5xl md:text-7xl font-serif font-extralight text-center tracking-tight"
           >
-            Somos R.A Sport
+            Somos R.A Sports
           </motion.h1>
 
           <motion.a

@@ -28,6 +28,7 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
         const trayectoriaOrdenada = jugador.trayectoria
             ? [...jugador.trayectoria].sort((a, b) => a.anio_desde - b.anio_desde)
             : [];
+        const tieneLogros = Boolean(jugador.trofeos?.length);
 
         const clubActual = jugador.trayectoria?.find((t) => t.es_actual) || jugador.trayectoria?.[jugador.trayectoria.length - 1];
 
@@ -43,6 +44,47 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
 
         const primerNombre = jugador.nombre.split(" ")[0] || "";
         const segundoNombre = jugador.nombre.split(" ").slice(1).join(" ") || "";
+
+        const trayectoriaSection = trayectoriaOrdenada.length > 0 && (
+            <div className="bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+                <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                    <div className="p-1.5 bg-blue-100 text-blue-600">
+                        <Footprints className="w-4 h-4" />
+                    </div>
+                    <h2 className="text-base font-bold text-slate-900">Trayectoria Deportiva</h2>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                    {trayectoriaOrdenada.map((item, idx) => (
+                        <div
+                            key={idx}
+                            className={`flex items-center gap-2.5 p-2.5 border text-xs ${item.es_actual
+                                ? "bg-blue-50/70 border-blue-200 font-semibold"
+                                : "bg-slate-50 border-slate-200"
+                                }`}
+                        >
+                            {item.club_escudo ? (
+                                <img
+                                    src={getFullUrl(item.club_escudo)}
+                                    alt={item.club}
+                                    className="w-6 h-6 object-contain shrink-0"
+                                    crossOrigin="anonymous"
+                                />
+                            ) : (
+                                <Shield className="w-4 h-4 text-slate-400 shrink-0" />
+                            )}
+                            <div>
+                                <p className="font-bold text-slate-800 leading-tight">{item.club}</p>
+                                <p className="text-[10px] text-slate-500">
+                                    {item.anio_desde} {item.es_actual ? "- Actualidad" : item.anio_hasta ? `- ${item.anio_hasta}` : ""}
+                                    {item.club_pais ? ` (${item.club_pais})` : ""}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
 
         return (
             <div
@@ -133,9 +175,9 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
                                         <Globe className="w-3.5 h-3.5" />
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-[10px] text-slate-500 font-medium">Pasaporte</p>
+                                        <p className="text-[10px] text-slate-500 font-medium">Nacionalidad</p>
                                         <p className="text-xs font-bold text-slate-800 ">
-                                            {jugador.pasaporte ? `Argentina / ${jugador.pasaporte}` : "No posee"}
+                                            {jugador.pasaporte ? `Argentina / ${jugador.pasaporte}` : "Argentina"}
                                         </p>
                                     </div>
                                 </div>
@@ -235,85 +277,40 @@ export const JugadorPdfTemplate = forwardRef<HTMLDivElement, JugadorPdfTemplateP
                         )}
                     </div>
 
-                    {/* COLUMNA DERECHA: SECCIÓN VIDEO (REMPLAZANDO REPRODUCTOR CON BOTÓN INTERACTIVO) */}
-                    <div className="col-span-6 bg-white border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
-
-                        {jugador.trofeos && jugador.trofeos.length > 0 && (
-                            <div className="bg-white border border-slate-200 p-5 shadow-xs space-y-4">
-                                <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
-                                    <div className="p-1.5 bg-amber-100 text-amber-700">
-                                        <Award className="w-4 h-4" />
-                                    </div>
-                                    <h2 className="text-base font-bold text-slate-900">Logros</h2>
-                                </div>
-
-                                <div className="grid grid-cols-1 gap-3">
-                                    {jugador.trofeos.map((t, idx) => (
-                                        <div key={idx} className="p-3 border border-slate-100 bg-slate-50 flex items-center gap-2.5">
-                                            <div className="p-1.5 bg-amber-50 text-amber-600 border border-amber-100 shrink-0">
-                                                <Award className="w-4 h-4" />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <p className="text-xs font-bold text-slate-900">{t.trofeo}</p>
-                                                <p className="text-[10px] text-slate-500">
-                                                    {t.club ? `${t.club} (${t.anio})` : `Año ${t.anio}`}
-                                                </p>
-                                            </div>
+                    {/* COLUMNA DERECHA: LOGROS O TRAYECTORIA */}
+                    {(tieneLogros || trayectoriaSection) && (
+                        <div className="col-span-6 bg-white border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
+                            {tieneLogros ? (
+                                <div className="bg-white border border-slate-200 p-5 shadow-xs space-y-4">
+                                    <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                                        <div className="p-1.5 bg-amber-100 text-amber-700">
+                                            <Award className="w-4 h-4" />
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                                        <h2 className="text-base font-bold text-slate-900">Logros</h2>
+                                    </div>
 
-                    </div>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        {jugador.trofeos.map((t, idx) => (
+                                            <div key={idx} className="p-3 border border-slate-100 bg-slate-50 flex items-center gap-2.5">
+                                                <div className="p-1.5 bg-amber-50 text-amber-600 border border-amber-100 shrink-0">
+                                                    <Award className="w-4 h-4" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-xs font-bold text-slate-900">{t.trofeo}</p>
+                                                    <p className="text-[10px] text-slate-500">
+                                                        {t.club ? `${t.club} (${t.anio})` : `Año ${t.anio}`}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : trayectoriaSection}
+                        </div>
+                    )}
                 </div>
 
-                {/* 2. LOGROS / PALMARÉS */}
-
-
-                {/* 3. TRAYECTORIA DEPORTIVA */}
-                {trayectoriaOrdenada.length > 0 && (
-                    <div className="bg-white border border-slate-200 p-5 shadow-xs space-y-4">
-                        <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
-                            <div className="p-1.5 bg-blue-100 text-blue-600">
-                                <Footprints className="w-4 h-4" />
-                            </div>
-                            <h2 className="text-base font-bold text-slate-900">Trayectoria Deportiva</h2>
-                        </div>
-
-                        <div className="flex items-center flex-wrap gap-3">
-                            {trayectoriaOrdenada.map((item, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`flex items-center gap-2.5 p-2.5 border text-xs ${item.es_actual
-                                        ? "bg-blue-50/70 border-blue-200 font-semibold"
-                                        : "bg-slate-50 border-slate-200"
-                                        }`}
-                                >
-                                    {item.club_escudo ? (
-                                        <img
-                                            src={getFullUrl(item.club_escudo)}
-                                            alt={item.club}
-                                            className="w-6 h-6 object-contain shrink-0"
-                                            crossOrigin="anonymous"
-                                        />
-                                    ) : (
-                                        <Shield className="w-4 h-4 text-slate-400 shrink-0" />
-                                    )}
-                                    <div>
-                                        <p className="font-bold text-slate-800 leading-tight">{item.club}</p>
-                                        <p className="text-[10px] text-slate-500">
-                                            {item.anio_desde} {item.es_actual ? "- Actualidad" : item.anio_hasta ? `- ${item.anio_hasta}` : ""}
-                                            {item.club_pais ? ` (${item.club_pais})` : ""}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-
+                {tieneLogros && trayectoriaSection}
 
                 {/* PIE DE PÁGINA BRANDING */}
                 <div className="bg-[#0d1d34] text-white p-4 text-center text-xs flex items-center justify-between border-t border-blue-400/20">
