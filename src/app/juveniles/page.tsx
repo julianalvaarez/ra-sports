@@ -4,6 +4,8 @@ import { ListaJugadoresCatalog } from '@/app/components/ListaJugadoresCatalog';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rasports.agency';
 
 export const metadata: Metadata = {

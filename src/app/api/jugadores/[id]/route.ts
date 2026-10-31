@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import {
     obtenerJugadorCompleto,
     actualizarJugador,
@@ -45,6 +46,14 @@ export async function PUT(
         if (!jugador) {
             return NextResponse.json({ error: 'Jugador no encontrado' }, { status: 404 });
         }
+
+        // Invalidar caché de listados y ficha del jugador
+        revalidatePath('/');
+        revalidatePath('/profesionales');
+        revalidatePath('/juveniles');
+        revalidatePath('/admin');
+        revalidatePath(`/jugadores/${id}`);
+
         return NextResponse.json(jugador);
     } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : 'Error al actualizar el jugador';
@@ -63,6 +72,14 @@ export async function DELETE(
         if (!eliminado) {
             return NextResponse.json({ error: 'Jugador no encontrado' }, { status: 404 });
         }
+
+        // Invalidar caché de listados
+        revalidatePath('/');
+        revalidatePath('/profesionales');
+        revalidatePath('/juveniles');
+        revalidatePath('/admin');
+        revalidatePath(`/jugadores/${id}`);
+
         return NextResponse.json({ mensaje: `Jugador ${id} eliminado correctamente` });
     } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : 'Error al eliminar el jugador';

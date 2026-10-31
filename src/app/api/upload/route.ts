@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { supabaseServer } from '@/lib/supabaseServer';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -12,7 +12,7 @@ async function subirASupabase(
     buffer: Buffer,
     mimeType: string
 ): Promise<string> {
-    const { data, error } = await supabase.storage
+    const { data, error } = await supabaseServer.storage
         .from(bucketName)
         .upload(filename, buffer, {
             contentType: mimeType,
@@ -27,7 +27,7 @@ async function subirASupabase(
         throw new Error('Supabase no devolvió información del archivo subido');
     }
 
-    const { data: publicUrlData } = supabase.storage
+    const { data: publicUrlData } = supabaseServer.storage
         .from(bucketName)
         .getPublicUrl(data.path);
 
@@ -66,10 +66,12 @@ export async function POST(request: NextRequest) {
 
             const buffer = Buffer.from(await file.arrayBuffer());
             const fileName = file.name || 'archivo.jpg';
-            const extension = fileName.match(/\.([^.]+)$/)?.[1] || 'jpg';
+            const rawExtension = fileName.match(/\.([^.]+)$/)?.[1] || 'jpg';
+            const extension = rawExtension.toLowerCase();
             const cleanBaseName = fileName
                 .replace(/\.[^.]+$/, '')
-                .replace(/[^a-zA-Z0-9._-]/g, '_')
+                .replace(/\.[^.]+$/, '') // evitar extensiones duplicadas tipo .jpg.jpg
+                .replace(/[^a-zA-Z0-9_-]/g, '_')
                 .toLowerCase();
             const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}_${cleanBaseName}.${extension}`;
             const supabasePath = `${folder}/${uniqueFilename}`;
@@ -95,13 +97,14 @@ export async function POST(request: NextRequest) {
 
             // En producción el sistema de archivos local no es persistente ni necesariamente escribible.
             if (!publicUrl) {
+                console.error('Falló la subida de archivos a Supabase Storage:', erroresSupabase);
                 if (process.env.NODE_ENV === 'production') {
-                    console.error('Falló la subida de archivos a Supabase Storage:', erroresSupabase);
                     throw new Error(
-                        'No se pudo subir el archivo a Supabase Storage. Verifica que exista el bucket "players-rasports" o "jugadores" y que las credenciales de producción permitan subir archivos.'
+                        `No se pudo subir la imagen a Supabase Storage: ${erroresSupabase.join(', ')}. Verifica que el bucket "players-rasports" exista y tenga políticas públicas de inserción.`
                     );
                 }
 
+                // Fallback temporal solo en desarrollo local
                 publicUrl = await guardarEnDiscoLocal(folder, uniqueFilename, buffer);
             }
 

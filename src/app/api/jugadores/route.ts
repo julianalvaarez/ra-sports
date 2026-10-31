@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { obtenerJugadoresResumen, crearJugador } from '@/lib/jugadores.service';
 import type { CrearJugadorPayload, JugadorResumen, JugadorCompleto, ApiErrorResponse } from '@/types';
 
@@ -21,6 +22,13 @@ export async function POST(request: NextRequest): Promise<NextResponse<JugadorCo
         if (!jugador) {
             return NextResponse.json({ error: 'No se pudo crear el jugador' }, { status: 400 });
         }
+
+        // Invalidar caché para que se vea reflejado al instante en producción
+        revalidatePath('/');
+        revalidatePath('/profesionales');
+        revalidatePath('/juveniles');
+        revalidatePath('/admin');
+
         return NextResponse.json(jugador, { status: 201 });
     } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : 'Error al procesar la solicitud';

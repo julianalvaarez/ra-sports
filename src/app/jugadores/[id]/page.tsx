@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { obtenerJugadorCompleto } from "@/lib/jugadores.service";
 import { JugadorPageClient } from "@/app/components/JugadorPageClient";
 
+export const dynamic = 'force-dynamic';
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rasports.agency';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {

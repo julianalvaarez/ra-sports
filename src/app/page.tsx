@@ -2,6 +2,8 @@ import { obtenerJugadoresResumen } from "@/lib/jugadores.service";
 import { Jugador } from "@/types";
 import { HomePageClient } from "./components/HomePageClient";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const jugadores: Jugador[] = await obtenerJugadoresResumen();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rasports.agency';
@@ -25,4 +27,3 @@ export default async function Home() {
     </>
   )
 }
-
